@@ -43,10 +43,10 @@ workflows:
     jobs:
       - test
       - terraform_plan
-      - hold-apply:
+      - terraform_apply_approval:
           type: approval
           requires:
-            - plan-apply
-      - apply:
+            - terraform_plan
+      - terrform_apply:
           requires:
-            - hold-apply
+            - terraform_apply_approval
