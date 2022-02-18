@@ -8,6 +8,6 @@ terraform {
   backend "s3" {
     bucket = "main"
     key = "terraform/webapp/terraform.tfstate"
-    region = "eu-west-2"
+    region = "eu-west-1"
   }
 }
