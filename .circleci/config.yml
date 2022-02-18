@@ -47,6 +47,6 @@ workflows:
           type: approval
           requires:
             - terraform_plan
-      - terrform_apply:
+      - terraform_apply:
           requires:
             - terraform_apply_approval
