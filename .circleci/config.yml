@@ -9,8 +9,23 @@ jobs:
           name: Test
           command: |
             echo 'Running test command'
+  terraform_plan:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform init & plan
+          command: |
+            terraform init -input=false
+            terraform plan -out tfapply -var-file variables.tfvars
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
 workflows:
   example:
     jobs:
       - test
+      - terraform_plan
