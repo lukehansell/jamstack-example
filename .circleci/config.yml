@@ -1,0 +1,11 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - run:
+          name: Test
+          command: |
+            echo 'Running test command'
