@@ -4,9 +4,9 @@ terraform {
       source = "hashicorp/aws"
     }
   }
-}
-
-resource "aws_s3_bucket" "main" {
-  bucket = "main"
-  region = "eu-west-2"
+  backend "s3" {
+    bucket = "YOUR-UNIQUE-BUCKET-ID"
+    key    = "terraform/webapp/terraform.tfstate"
+    region = "us-east-1"
+  }
 }
