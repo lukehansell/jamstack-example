@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "main"
+  bucket_prefix = "hansell-test-bucket-"
 }
 
 resource "aws_s3_bucket_acl" "example" {
