@@ -9,3 +9,8 @@ jobs:
           name: Test
           command: |
             echo 'Running test command'
+
+workflows:
+  example:
+    jobs:
+      - test
