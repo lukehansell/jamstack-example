@@ -1,3 +1,9 @@
+provider "aws" {
+  access_key = var.AWS_ACCESS_KEY_ID
+  secret_key = var.AWS_SECRET_ACCESS_KEY
+  region = var.aws_region
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "main"
 }
