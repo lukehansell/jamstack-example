@@ -4,10 +4,9 @@ terraform {
       source = "hashicorp/aws"
     }
   }
+}
 
-  backend "s3" {
-    bucket = "main"
-    key = "terraform/webapp/terraform.tfstate"
-    region = "eu-west-1"
-  }
+resource "aws_s3_bucket" "main" {
+  bucket = "main"
+  acl = "private"
 }
