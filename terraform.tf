@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket_prefix = "hansell-test-bucket-"
+  bucket = "www.twowheeledadventuretours.com"
 }
 
 resource "aws_s3_bucket_acl" "example" {
