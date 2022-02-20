@@ -5,12 +5,43 @@ orbs:
   terraform: circleci/terraform@3.0.1
 
 jobs:
+  setup:
+    docker:
+      - image: cimg/node:17.5.0
+    steps:
+      - checkout
+      - run: npm i
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: cimg/node:17.5.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run: npm test
+
+  build:
+    docker:
+      - image: cimg/node:17.5.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run: npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
   deploy:
     docker:
       - image: 'cimg/python:3.6'
     steps:
-      - checkout
-      - run: mkdir dist && cp -a src/www dist
+      - attach_workspace:
+          at: .
       - aws-s3/sync:
           from: dist
           to: 's3://www.twowheeledadventuretours.com'
@@ -18,28 +49,16 @@ jobs:
 workflows:
   deploy_site:
     jobs:
-      - terraform/validate:
-          checkout: true
-      - terraform/plan:
-          checkout: true
-          persist-workspace: true
+      - setup
+      - test:
           requires:
-            - terraform/validate
-      - terraform_approve:
-          type: approval
+            - setup
+      - build:
           requires:
-            - terraform/plan
-      - terraform/apply:
-          attach-workspace: true
-          requires: 
-            - terraform_approve
-      - terraform_destroy_approval:
-          type: approval
+            - setup
+      - approve_deploy:
           requires:
-            - terraform/apply
-      - terraform/destroy:
-          requires:
-            - terraform_destroy_approval
+            - build
       - deploy:
           requires:
-            - terraform/apply
+            - approve_deploy
