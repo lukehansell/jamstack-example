@@ -15,46 +15,17 @@ jobs:
           from: dist
           to: 's3://www.twowheeledadventuretours.com'
 
-  terraform_plan_destroy:
-    docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: terraform create destroy plan
-          command: |
-            terraform plan -destroy -out tfdestroy
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  terraform_destroy:
-    docker: 
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: terraform destroy
-          command: |
-            terraform apply -auto-approve tfdestroy
-
 workflows:
   deploy_site:
     jobs:
       - terraform/fmt:
           checkout: true
-          context: terraform
       - terraform/validate:
           checkout: true
-          context: terraform
           requires:
             - terraform/fmt
       - terraform/plan:
           checkout: true
-          context: terraform
           persist-workspace: true
           requires:
             - terraform/validate
@@ -64,17 +35,13 @@ workflows:
             - terraform/plan
       - terraform/apply:
           attach-workspace: true
-          context: terraform
           requires: 
             - terraform_approve
-      - terraform_plan_destroy:
-          requires:
-            - terraform/apply
       - terraform_destroy_approval:
           type: approval
           requires:
-            - terraform_plan_destroy
-      - terraform_destroy:
+            - terraform/apply
+      - terraform/destroy:
           requires:
             - terraform_destroy_approval
       - deploy:
