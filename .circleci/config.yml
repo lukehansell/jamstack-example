@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   aws-s3: circleci/aws-s3@3.0.0
+  terraform: circleci/terraform@3.0.1
 
 jobs:
   deploy:
@@ -13,44 +14,6 @@ jobs:
       - aws-s3/sync:
           from: dist
           to: 's3://www.twowheeledadventuretours.com'
-  test:
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run:
-          name: Test
-          command: |
-            echo 'Running test command'
-
-  terraform_plan:
-    docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-    steps:
-      - checkout
-      - run:
-          name: terraform init & plan
-          command: |
-            terraform init -input=false
-            terraform plan -out tfapply
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
-  terraform_apply:
-    docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: terraform
-          command: |
-            terraform apply -auto-approve tfapply
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   terraform_plan_destroy:
     docker:
@@ -79,20 +42,34 @@ jobs:
             terraform apply -auto-approve tfdestroy
 
 workflows:
-  example:
+  deploy_site:
     jobs:
-      - test
-      - terraform_plan
-      - terraform_apply_approval:
+      - terraform/fmt:
+          checkout: true
+          context: terraform
+      - terraform/validate:
+          checkout: true
+          context: terraform
+          requires:
+            - terraform/fmt
+      - terraform/plan:
+          checkout: true
+          context: terraform
+          persist-workspace: true
+          requires:
+            - terraform/validate
+      - terraform_approve:
           type: approval
           requires:
-            - terraform_plan
-      - terraform_apply:
-          requires:
-            - terraform_apply_approval
+            - terraform/plan
+      - terraform/apply:
+          attach-workspace: true
+          context: terraform
+          requires: 
+            - terraform_approve
       - terraform_plan_destroy:
           requires:
-            - terraform_apply
+            - terraform/apply
       - terraform_destroy_approval:
           type: approval
           requires:
@@ -102,4 +79,4 @@ workflows:
             - terraform_destroy_approval
       - deploy:
           requires:
-            - terraform_apply
+            - terraform/apply
