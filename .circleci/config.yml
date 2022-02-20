@@ -9,7 +9,7 @@ jobs:
       - image: 'cimg/python:3.6'
     steps:
       - checkout
-      - run: mkdir dist && cp src/www dist
+      - run: mkdir dist && cp -a src/www dist
       - aws-s3/copy:
           from: dist
           to: 's3://www.twowheeledadventuretours.com'
