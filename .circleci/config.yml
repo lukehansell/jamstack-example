@@ -13,6 +13,7 @@ jobs:
       - aws-s3/copy:
           from: bucket/test.txt
           to: 's3://www.twowheeledadventuretours.com'
+          aws-region: 'eu-west-2'
   test:
     docker:
       - image: alpine:3.7
