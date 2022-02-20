@@ -6,6 +6,7 @@ provider "aws" {
 
 resource "aws_s3_bucket" "bucket" {
   bucket = "www.twowheeledadventuretours.com"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_acl" "example" {
