@@ -9,9 +9,9 @@ jobs:
       - image: 'cimg/python:3.6'
     steps:
       - checkout
-      - run: mkdir bucket && echo "lorem ipsum" > bucket/test.txt
+      - run: mkdir dist && cp src/www dist
       - aws-s3/copy:
-          from: bucket/test.txt
+          from: dist
           to: 's3://www.twowheeledadventuretours.com'
   test:
     docker:
