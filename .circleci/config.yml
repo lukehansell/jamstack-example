@@ -10,11 +10,6 @@ jobs:
     steps:
       - checkout
       - run: mkdir bucket && echo "lorem ipsum" > bucket/test.txt
-      - aws-s3/sync:
-          arguments: |
-            --cache-control "max-age=86400"
-          from: bucket
-          to: 's3://www.twowheeledadventuretours.com/prefix'
       - aws-s3/copy:
           from: bucket/test.txt
           to: 's3://www.twowheeledadventuretours.com'
