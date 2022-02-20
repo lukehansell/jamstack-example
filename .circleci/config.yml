@@ -57,6 +57,7 @@ workflows:
           requires:
             - setup
       - approve_deploy:
+          type: approval
           requires:
             - build
       - deploy:
