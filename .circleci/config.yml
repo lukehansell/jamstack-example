@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: mkdir dist && cp -a src/www dist
-      - aws-s3/copy:
+      - aws-s3/sync:
           from: dist
           to: 's3://www.twowheeledadventuretours.com'
   test:
