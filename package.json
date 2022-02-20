@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir dist && cp src/www dist"
+    "test": "echo \"Error: no test specified\"",
+    "build": "mkdir dist && cp -r src/www dist"
   },
   "keywords": [],
   "author": "",
