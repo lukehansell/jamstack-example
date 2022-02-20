@@ -21,3 +21,20 @@ resource "aws_s3_bucket_website_configuration" "example" {
     suffix = "index.html"
   }
 }
+
+data "aws_iam_policy_document" "allow_public_access" {
+  statement {
+    sid = "PublicReadGetObject"
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_s3_bucket_policy" "allow_public_access" {
+  bucket = aws_s3_bucket.bucket.id
+  policy = data.aws_iam_policy_document.allow_public_access.json
+}
