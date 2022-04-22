@@ -43,7 +43,7 @@ jobs:
       - attach_workspace:
           at: .
       - aws-s3/sync:
-          from: dist
+          from: dist/www
           to: 's3://www.twowheeledadventuretours.com'
 
 workflows:
