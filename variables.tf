@@ -13,7 +13,12 @@ variable "aws_region" {
   default = "eu-west-2"
 }
 
-variable "site_domain" {
+variable "domain_name" {
   type = string
   default = "www.twowheeledadventuretours.com"
+}
+
+variable "bucket_name" {
+  type = string
+  default = "twowheeledadventuretours.com"
 }
