@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
-    domain_name = aws_s2_bucket.www_bucket.website_endpoint
+    domain_name = aws_s3_bucket.www_bucket.website_endpoint
     origin_id = "S3-www.${var.bucket_name}"
 
     custom_origin_config {
